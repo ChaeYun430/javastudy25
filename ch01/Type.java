@@ -3,26 +3,26 @@ package ch01;
 public class Type {
 
 	public static void main(String[] args) {
-		//byteÅ¸ÀÔÀÇ ¿À·ù¹üÀ§ Å×½ºÆ®
+		//byteÅ¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
 		byte x = 125;
 		int y = 125;
 		
-		for (int i = 0; i < 5; i++) {//i = 0~4 ÃÊ±âÈ­½Ä ÄÚµå Áõ°¨½Ä Á¶°Ç½Ä_ ÄÚµå Áõ°¨½Ä Á¶°Ç½Ä_
+		for (int i = 0; i < 5; i++) {//i = 0~4 ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ç½ï¿½_ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ç½ï¿½_
 			x++;
 			y++;			
 			System.out.println("x : " + x + "           " + "y : " + y);
 		}
 		
-		//À¯´ÏÄÚµå¿Í char
-		char charVar1 = '°¡';
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ char
+		char charVar1 = 'A';
 		char charVar2 = 44032;
-		char charVar3 = '\uac00'; //ÀÛÀº µû¿ÈÇ¥ 
+		char charVar3 = '\uac00'; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¥ 
 		
 		System.out.println(charVar1);
 		System.out.println(charVar2);
 		System.out.println(charVar3);
 		
-		//intÅ¸ÀÔÀÇ ¹üÀ§¸¦ ¹þ¾î³­ °ª longÅ¸ÀÔÀ¸·Î Ç¥Çö
+		//intÅ¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³­ ï¿½ï¿½ longÅ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
 		long longvar1 = 2147483647;
 		//long longvar2 = 2147483648;
 		long longvar2 = 2147483648L;

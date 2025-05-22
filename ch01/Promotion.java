@@ -8,7 +8,7 @@ public class Promotion {
 		int intValue = byteValue;
 		System.out.println(intValue);
 
-		char charValue = '°¡';
+		char charValue = 'A';
 		int intValue1 = charValue;
 		System.out.println(intValue1);
 
