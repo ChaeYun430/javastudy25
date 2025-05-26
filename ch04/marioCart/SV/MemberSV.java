@@ -32,13 +32,13 @@ public class MemberSV {
 				memberDTO.email = scStr.next();
 				System.out.print("nick: ");
 				memberDTO.nick = scStr.next();
-
 				for (int i = 1; i < memberDTOs.length; i++) {
 					if (memberDTOs[i] == null) {
 						memberDTOs[i] = memberDTO;
 						return memberDTOs;
 					}
 				}
+				break;
 
 			case "2":
 				String inputID = scStr.next();

@@ -2,6 +2,8 @@ package ch04.car;
 
 import java.util.Scanner;
 
+import ch04.marioCart.SV.Num;
+
 public class Car {
 
 	// 필드명

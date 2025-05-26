@@ -1,5 +1,6 @@
 package ch04.marioCart;
 
+import java.util.Calendar;
 import java.util.Scanner;
 
 import ch04.marioCart.SV.MemberSV;
@@ -10,6 +11,7 @@ public class MarioCartExam {
 	public static Scanner scInt = new Scanner(System.in);
 	public static Scanner scStr = new Scanner(System.in);
 	public static MemberDTO[] memberDTOs = new MemberDTO[999];
+	public static ItemDTO itemDTO;
 	public static Seesion loginState;
 
 	static {
@@ -20,6 +22,7 @@ public class MarioCartExam {
 	public static void main(String[] args) {
 		boolean run1 = true;
 		while (run1) {
+	
 			System.out.println("<마리오 카트>에 오신 것을 환영합니다.");
 			System.out.println("1. guest | 2. user | 3. 시스템 종료");
 			System.out.print(">>>");
@@ -29,6 +32,11 @@ public class MarioCartExam {
 				System.out.println("게임 진행기록이 저장되지 않습니다.");
 				System.out.println("계속하시겠습니까?");
 				System.out.println("1. 예 | 2. 아니오");
+			
+
+
+
+				
 				//게스트와 사용자의 구분을 어디에?? 설정
 				MemberSV.memberMenu(scInt, scStr, memberDTOs);
 				break;
