@@ -8,33 +8,55 @@ import ch05.member.MemberDTO;
 
 public class AccountSV {
 	
+
 	public AccountDTO create(Scanner scInt,Scanner scStr, MemberDTO mem) {
+
 		AccountDTO account = new AccountDTO();
 		authorize();// 개인정보... 로 본인확인.......
 		
-		String ano = scStr.next();
-		if (ano.hashCode() != 13) {
+		boolean run3 = true;
+		while (run3){
+		System.out.print("계좌번호: ");
+		account.setAno(scStr.next());
+		System.out.print("비밀번호: ");
+		account.setPw(scStr.next());
+		System.out.print("비밀번호 확인: ");
+		String input = scStr.next();
+		if((input.equals(account.getpw()))){
+		System.out.println("비밀번호 설정이 완료 되었습니다.");
+		}else{
+		System.out.println("설정하신 비밀번호와 일치하지 않습니다.");
+		System.out.println("계좌 생성 처음으로 돌아갑니다.");
+		break;
+		}
+		
+		
+		System.out.print("계좌번호: ");
+		account.setDate();
+		
+		Sysstem.out.println(mem.getname()+"의 계좌 생성이 완료 되었습니다.");
+
+
+		if (ano != 13) {
 			System.out.println("계좌번호 13자리를 알맞게 입력해주세요.");
 			return null;
 		}
 		//중복 확인은 db 필요한데...가상으로 만들기??
-		String pw = 
-		account.setPw();
+
+		
 		
 		
 		
 	
-	}
+	}//create method
+
 	
-	private void authorize() {
+	private void identify() {
 	
 		
 	}
 
-	public AccountDTO findAccount(AccountDTO[] accounts, AccountDTO account) {
-		
-		return account
-	}
+
 	
 	public	void withdraw(Scanner scInt,Scanner scStr, MemberDTO mem, AccountDTO account) {
 		System.out.println("===============예금 출금============");
@@ -86,7 +108,19 @@ public class AccountSV {
 		
 		member.getMoneyDTO().cashDTO.cash10000-1;
 	}
-	public MemberDTO identify(Scanner scInt,Scanner scStr, AccountDTO myaccount) {
+
+
+
+
+		public AccountDTO findAccount(AccountDTO[] accounts, AccountDTO account) {
+		
+		for(int i = 0; i < 
+		return account
+	}//findAccount method
+
+
+
+	public MemberDTO authorize(Scanner scInt,Scanner scStr, AccountDTO myaccount) {
 		
 		System.out.println("계좌 비밀번호를 입력해 주세요.");
 		System.out.print(">>>");
@@ -95,5 +129,6 @@ public class AccountSV {
 			return 
 		}
 		return 
-	}
+			}//authorize method
+
 }
