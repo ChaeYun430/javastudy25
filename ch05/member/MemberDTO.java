@@ -2,31 +2,29 @@ package ch05.member;
 
 import java.util.Scanner;
 
-import ch04.marioCart.dto.mapDTO;
-import ch05.member.money.CashDTO;
 import ch05.member.money.MoneyDTO;
 
 public class MemberDTO {
 	private String name;
 	private String mno;
 	private MoneyDTO moneyDTO;
+	//private BodyDTO component;
+	//private ThingsDTO	Posession;
 	
-
-	
-	public MemberDTO(Scanner scInt, Scanner scStr) {
-		name = scStr.next();
-		mno = scStr.next();
-	}
 	public MemberDTO() {
-		name = "이채윤";
-		mno = "1234561234567";
-		moneyDTO.cashDTO.cash50000 = 10;
-		moneyDTO.cashDTO.cash10000= 20;
-		moneyDTO.cashDTO.cash5000= 30;
-		moneyDTO.cashDTO.cash1000 = 40;
+	
 		
 	}
 
+	public MemberDTO(String name, String mno, MoneyDTO money) {
+	this.name = name;
+	this.mno = mno;
+	this.money = money;
+	}
+
+
+
+	
 	public String getName() {
 		return name;
 	}
