@@ -1,6 +1,8 @@
 package ch05.atm.dto;
 
-public class WoribankDTO {
-	private AccountDTO[] woriAccountDTOs = new AccountDTO[100];
+public class WoribankDTO extends BankDTO{
 	
+	public static AccountDTO[] accountDTOs= new AccountDTO[20];
+	
+
 }

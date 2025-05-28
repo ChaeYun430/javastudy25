@@ -13,13 +13,12 @@ public class MemberDTO {
 	
 	public MemberDTO() {
 	
-		
 	}
 
 	public MemberDTO(String name, String mno, MoneyDTO money) {
 	this.name = name;
 	this.mno = mno;
-	this.money = money;
+	this.moneyDTO = money;
 	}
 
 
@@ -45,7 +44,7 @@ public class MemberDTO {
 		return moneyDTO;
 	}
 
-	public void setMoneyDTO(CashDTO cashDTO) {
+	public void setMoneyDTO() {
 		
 		this.moneyDTO = moneyDTO;
 	}

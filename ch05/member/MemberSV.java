@@ -10,47 +10,20 @@ public class MemberSV {
 	private String name;
 	private String mno;
 	private MoneyDTO moneyDTO;
-
+	public MemberDTO[] memberDTOs = new MemberDTO[10];
 	
-	public MemberSV(Scanner scInt, Scanner scStr) {
-		name = scStr.next();
-		mno = scStr.next();
+
+	static {
+		MemberDTO mem0 = new MemberDTO("A", "1234561234567", null );
+		MemberDTO mem1 = new MemberDTO("B", "2234561234567", null );
+		MemberDTO mem2 = new MemberDTO("C", "3234561234567", null );
+		MemberDTO mem3 = new MemberDTO("D", "4234561234567", null );
 	}
 	public MemberSV() {
-		name = "이채윤";
-		mno = "1234561234567";
-		moneyDTO.cashDTO.cash50000 = 10;
-		moneyDTO.cashDTO.cash10000= 20;
-		moneyDTO.cashDTO.cash5000= 30;
-		moneyDTO.cashDTO.cash1000 = 40;
-		
+
 	}
 
-	public String getName() {
-		return name;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getMno() {
-		return mno;
-	}
-
-	public void setMno(String mno) {
-		this.mno = mno;
-	}
-
-	public MoneyDTO getMoneyDTO() {
-		return moneyDTO;
-	}
-
-	public void setMoneyDTO(CashDTO cashDTO) {
-		
-		this.moneyDTO = moneyDTO;
-	}
-	
 	
 	
 }
