@@ -44,10 +44,17 @@ public class ScoreSV {
 		}
 		
 		System.out.println(teacher.getSubjects()+ "과 성적입력이 완료되었습니다.");
-	
+		
+		
 		//성적 입력과 합계의 연결부 보수 필요
 		if (students[i-1].getScoreDTO().getKor()!=0&&students[i-1].getScoreDTO().getMath()!=0&&students[i-1].getScoreDTO().getEng()!=0&&students[i-1].getScoreDTO().getSci()!=0) {
 		
+			for (int j = 0; j < i; j++) {
+				students[j].getScoreDTO().setTotal();
+				students[j].getScoreDTO().setTotal();
+				
+			}
+			
 			for (int j = 0; j < i-2; j++) {
 				for (int k = 0; k < i-1; k++) {
 					if (students[k].getScoreDTO().getAvg() < students[k+1].getScoreDTO().getAvg()) {
