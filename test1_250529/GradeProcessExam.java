@@ -32,6 +32,14 @@ public class GradeProcessExam {
 		studentDTOs[4] = studentDTO4;
 		studentDTOs[5] = studentDTO5;
 		
+		for (int j = 0; j < studentDTOs.length; j++) {
+			if (studentDTOs[j] ==null) {
+				continue;
+			}
+			studentDTOs[j].setStudentId(studentDTOs[j].getGrade(), studentDTOs[j].getClassRoom(), studentDTOs[j].getStuNum());
+			
+		}
+		
 		int i = 0;
 		for (; i < studentDTOs.length; i++) {
 			if (studentDTOs[i] ==null) {
@@ -59,7 +67,8 @@ public class GradeProcessExam {
 
 		boolean run1 = true;
 		while (run1) {
-			String[] logInMenus = { "1. 교사 로그인", "2. 학생 로그인" };
+			System.out.println("===============성적 처리 프로그램================");
+			String[] logInMenus = { "1. 교사 로그인", "2. 학생 로그인", "3. 프로그램 종료" };
 			for (int i = 0; i < logInMenus.length; i++) {
 				System.out.println(logInMenus[i]);
 			}
@@ -77,6 +86,7 @@ public class GradeProcessExam {
 				
 				boolean run2 = true;
 				while (run2) {
+					System.out.println("===============성적 처리 프로그램================");
 					String[] gradeMenus = { "1. 성적 입력", "2. 전체 성적 열람", "3. 개별학생 성적 열람", "4. 성적 수정", "5. 성적 삭제" , "6. 로그아웃"};
 					for (int i = 0; i < gradeMenus.length; i++) {
 						System.out.println(gradeMenus[i]);
@@ -88,11 +98,16 @@ public class GradeProcessExam {
 						ScoreSV.create(scStr, scInt, studentDTOs, teacher);
 						break;
 					case "2":
-						ScoreSV.readAllStudent(studentDTOs, studentCount);
+						ScoreSV.readAllStudent(scStr, studentDTOs, studentCount);
 						break;
 					case "3":
 						StudentDTO student = ScoreSV.find(scStr, studentDTOs);
-						ScoreSV.readEachStudent(student, studentCount);
+						if (student == null) {
+							System.out.println("찾으시는 학생이 존재하지 않습니다.");
+							System.out.println("이전 메뉴로 돌아갑니다.");
+							break;
+						}
+						ScoreSV.readEachStudent(scStr, student, studentCount);
 						break;
 					case "4":
 						ScoreSV.update(scStr, scInt, studentDTOs, teacher);
@@ -115,7 +130,7 @@ public class GradeProcessExam {
 					System.out.println("이전 메뉴로 돌아갑니다.");
 					break;
 				}
-				ScoreSV.readEachStudent(student, studentCount);
+				ScoreSV.readEachStudent(scStr, student, studentCount);
 
 				break;
 			case "3":

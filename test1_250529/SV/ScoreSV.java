@@ -17,7 +17,7 @@ public class ScoreSV {
 				break;
 			}
 			
-			System.out.println(students[i].getName()+" 학생");
+			System.out.print(students[i].getName()+" 학생의 ");
 			switch (teacher.getSubjects()) {
 			case "국어":
 				System.out.print("국어점수: ");
@@ -38,11 +38,9 @@ public class ScoreSV {
 
 			default:
 				System.out.println("점수 입력이 불가합니다.");
-			}
-			System.out.println(students[i].getName() + " 학생의 성적 입력이 완료되었습니다.");
-			
+			}	
+
 		}
-		
 		System.out.println(teacher.getSubjects()+ "과 성적입력이 완료되었습니다.");
 		
 		
@@ -51,7 +49,7 @@ public class ScoreSV {
 		
 			for (int j = 0; j < i; j++) {
 				students[j].getScoreDTO().setTotal();
-				students[j].getScoreDTO().setTotal();
+				students[j].getScoreDTO().setAvg();
 				
 			}
 			
@@ -73,21 +71,21 @@ public class ScoreSV {
 	
 
 	// readAll
-	public static void readAllStudent(StudentDTO[] students, int studentCount) {
+	public static void readAllStudent(Scanner scStr,StudentDTO[] students, int studentCount) {
 		System.out.println("==========전교생 성적 열람=============");
 		System.out.println();
 		for (int i = 0; i < students.length; i++) {
 			if (students[i] == null) {
 				continue;
 			}
-			ScoreSV.readEachStudent(students[i], studentCount);
+			ScoreSV.readEachStudent(scStr, students[i], studentCount);
 		}
 		
 	}
 
 	// readEachStudent
-	public static void readEachStudent(StudentDTO student, int studentCount) {
-		System.out.println("========" + student.getName() + " 학생의 개인 성적 열람");
+	public static void readEachStudent(Scanner scStr, StudentDTO student, int studentCount) {
+		System.out.println("========" + student.getName() + " 학생의 개인 성적 열람===============" );
 		System.out.println("국어: " + student.getScoreDTO().getKor() + "점");
 		System.out.println("수학: " + student.getScoreDTO().getMath() + "점");
 		System.out.println("영어: " + student.getScoreDTO().getEng() + "점");
@@ -149,7 +147,9 @@ public class ScoreSV {
 		String input = scStr.next();
 
 		for (int i = 0; i < students.length; i++) {
-			if (students[i].getStudentId().equals(input)) {
+			if (students[i] == null) {
+				continue;
+		}else if (students[i].getStudentId().equals(input)) {
 				return students[i];
 			}
 		}

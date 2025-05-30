@@ -6,7 +6,7 @@ public class ScoreDTO {
 	private int eng;
 	private int sci;
 	private int total;
-	private double avg = total/4.0;
+	private double avg;
 	private int rank;
 	
 	public ScoreDTO(int kor, int math, int eng, int sci) {
@@ -69,8 +69,9 @@ public class ScoreDTO {
 		return avg;
 	}
 
-	public void setAvg(double avg) {
-		this.avg = avg;
+	public void setAvg() {
+		
+		this.avg = total/4;
 	}
 	
 	

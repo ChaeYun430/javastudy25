@@ -38,10 +38,6 @@ public class MemberDTO {
 		return classRoom;
 	}
 	public void setClassRoom(String classRoom) {
-		if (classRoom.length()<2) {
-			this.classRoom = "0" + classRoom;
-		}
-		
 		this.classRoom = classRoom;
 	}
 
