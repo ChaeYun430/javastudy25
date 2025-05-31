@@ -1,6 +1,6 @@
 pakage ch05.airplane;
 
-public class SuperSonicAirplane(
+public class SuperSonicAirplane extends Airplane(
 
 public static void main(String args){
 
