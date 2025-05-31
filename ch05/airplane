@@ -1,11 +1,9 @@
 //클래스명 바꾸기
 pakage ch05.airplane;
 
-public class AirplaneSV{
+public class Airplane{
 
 public static void main(String args){
-
-public int speed = 1;
 
 public void takeOff()	{
 
