@@ -1,4 +1,4 @@
-package ch05.Tire;
+package ch05.tire;
 
 public class Car {
 	Tire leftFront;
@@ -13,8 +13,7 @@ public class Car {
 		rightBack = new Tire(20, "우측 뒤");
 	}
 	
-	void change(Car myCar) {
-		myCar.leftBack = new GhTire(5, null);
-		
+	void changeTire(Car myCar) {
+
 	}
 }
