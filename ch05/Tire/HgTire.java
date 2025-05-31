@@ -2,13 +2,12 @@ package ch05.Tire;
 
 public class HgTire extends Tire {
 
-
 	public HgTire(int macRotation, String location) {
 		super(macRotation, location);
-		
 	}
 
 	@Override
+//자식 클래스를 이용해 객체를 교체하면 오버라이딩된다.
 	public boolean roll() {
 		if (accRotation < macRotation) {
 			accRotation++;
