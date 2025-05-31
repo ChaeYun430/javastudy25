@@ -3,7 +3,7 @@ pakage ch05.airplane;
 
 public class Airplane{
 
-public static void main(String args){
+
 
 public void takeOff()	{
 
@@ -20,7 +20,5 @@ System.out.println("비행합니다.");
 public void land() {
 
 System.out.println("착륙합니다.");
-
-}
 
 }
