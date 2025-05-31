@@ -5,11 +5,11 @@ public class SuperSonicAirplane extends Airplane(
 public static void main(String args){
 
 //상수 선언
-private static final int NORMAL = 1;
-private static final int SUPERSONIC = 2;
+public static final int NORMAL = 1;
+public static final int SUPERSONIC = 2;
 //final 필드는 상속 불가하므로 위치 주의할 것
 
-private int flyMode = NORMAL:
+public int flyMode = NORMAL:
 
 @override
 //컴파일러에게 메서드를 오버라이딩하는 것이라고 알린다.
