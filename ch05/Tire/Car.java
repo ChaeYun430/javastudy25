@@ -13,6 +13,9 @@ public class Car {
 		rightBack = new Tire(20, "우측 뒤");
 	}
 	
+void run(Car myCar){
+
+}
 	void changeTire(Car myCar) {
 
 	}
