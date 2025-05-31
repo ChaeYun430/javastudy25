@@ -1,0 +1,24 @@
+pakage ch05.airplane;
+
+public class SuperSonicAirplaneExam(
+
+public static void main(String args){
+
+SuperSonicAirplane sonic = new SuperSonicAirplane();
+
+sonic.takeOff();
+
+sonic.fly(superSonicAirplane.flyMode);
+
+sonic.flyMode = sonic.SUPERSONIC;
+
+sonic.fly(superSonicAirplane.flyMode);
+
+sonic.flyMode = sonic.NORMAL;
+
+sonic.fly(superSonicAirplane.flyMode);
+
+sonic.land();
+
+}
+}
