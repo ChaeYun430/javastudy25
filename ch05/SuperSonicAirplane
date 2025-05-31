@@ -1,0 +1,12 @@
+pakage ch05.airplane;
+
+public class SuperSonicAirplane(
+
+public static void main(String args){
+
+private final int NORMAL = 1;
+private final int NORMAL = 2;
+//final 필드는 상속 불가하므로 위치 주의할 것
+
+}
+}
