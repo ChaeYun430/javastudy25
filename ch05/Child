@@ -1,0 +1,10 @@
+pakage ch05.casting;
+
+public class Child extends Parent{
+
+String field2;
+void method2(){
+System.out.println("오버라이딩된 메서드");
+}
+void method3(){
+}
