@@ -4,3 +4,8 @@ public class CastingTestExam{
 
 public static main(String args){
 
+//자동 타입 변환
+//부모 필드 + 부모 오버라이딘 안 된 메서드 + 자식 오버라이딩된 메서드
+Parent parent = new Child;
+
+
