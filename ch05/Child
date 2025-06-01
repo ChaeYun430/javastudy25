@@ -3,6 +3,7 @@ pakage ch05.casting;
 public class Child extends Parent{
 
 String field2;
+@override
 void method2(){
 System.out.println("오버라이딩된 메서드");
 }
