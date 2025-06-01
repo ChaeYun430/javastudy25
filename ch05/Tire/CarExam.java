@@ -25,14 +25,12 @@ public class CarExam {
 				run = myCar.rightBack.roll();
 				break;
 			case "2":
-				run = myCar.leftBack.roll();
-				run = myCar.rightFront.roll();
+					run = myCar.rightFront.roll();
 				run = myCar.rightBack.roll();
 				break;
 			case "3":
 				run = myCar.leftFront.roll();
 				run = myCar.leftBack.roll();
-				run = myCar.rightBack.roll();
 				break;
 			case "4":
 				run = myCar.leftFront.roll();
