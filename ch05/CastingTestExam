@@ -1,0 +1,6 @@
+pakage ch05.casting;
+
+public class CastingTestExam{
+
+public static main(String args){
+
