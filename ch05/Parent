@@ -6,4 +6,6 @@ public class Parent{
 	}
 	void method2(){
 	}
+	void method3(){
+	}
 }
