@@ -1,22 +1,13 @@
 package ch05.tire;
 
 public class Car {
-	Tire leftFront;
-	Tire leftBack;
-	Tire rightFront;
-	Tire rightBack;
+
+Tire[] tire = {new Tire(5, "좌측 앞"), new Tire(10, "좌측 뒤"), new Tire(15, "우측 앞"), new Tire(20, "우측 뒤")}
+	//배열을 만들어 관리하면 인덱스로 표현이 되기 때문에 대입이나 제어문에서 활용하기 매우 쉽다.
 	
-	Car(){
-		leftFront = new Tire(5, "좌측 앞");
-		leftBack = new Tire(10, "좌측 뒤");
-		rightFront = new Tire(15, "우측 앞");
-		rightBack = new Tire(20, "우측 뒤");
-	}
-	
-void run(Car myCar){
+int run(){
 
 }
-	void changeTire(Car myCar) {
+	
 
-	}
 }
