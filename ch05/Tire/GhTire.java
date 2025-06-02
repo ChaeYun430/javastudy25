@@ -1,4 +1,4 @@
-package ch05.Tire;
+package ch05.tire;
 
 public class GhTire extends Tire{
 

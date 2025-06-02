@@ -1,7 +1,5 @@
 package ch05.atm.dto;
 
-public class BankDTO {
-
+public class CardDTO {
 	
-
 }

@@ -1,5 +1,5 @@
 //클래스명 바꾸기
-pakage ch05.airplane;
+package ch05.airplane;
 
 public class Airplane{
 
@@ -21,4 +21,5 @@ public void land() {
 
 System.out.println("착륙합니다.");
 
+}
 }

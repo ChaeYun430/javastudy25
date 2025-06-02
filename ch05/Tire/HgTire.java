@@ -1,4 +1,4 @@
-package ch05.Tire;
+package ch05.tire;
 
 public class HgTire extends Tire {
 
@@ -21,3 +21,4 @@ public class HgTire extends Tire {
 
 	
 }
+
