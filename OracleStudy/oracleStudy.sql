@@ -436,7 +436,7 @@ SELECT * FROM EMP_TEMP2;
 SELECT * FROM EMP_TEMP2 WHERE JOB = 'MANAGER';
 DELETE FROM EMP_TEMP2 WHERE JOB = 'MANAGER';
 SELECT * FROM EMP_TEMP2;
---WHERE절에 서브쿼리 사용하여 揷 삭제
+--WHERE절에 서브쿼리 사용하여 읿부 삭제
 DELETE FROM EMP_TEMP2 WHERE EMPNO IN (SELECT E.EMPNO FROM EMP_TEMP2 E, SALGRADE S WHERE E.SAL BETWEEN S.LOSAL AND S.HISAL AND S.GRADE = 3 AND DEPTNO = 30);
 SELECT * FROM EMP_TEMP2;
 SELECT * FROM SALGRADE;
@@ -793,3 +793,29 @@ DELETE FROM DEPT_FK WHERE DEPTNO = 10;
 --======================CHECK=========================
 
 --활용: 열에 저장할 수 있는 값의 범위 또는 패턴 정의할 때 사용
+
+--===================<<<사용자 관리>>>======================
+--업무별 사용자 생성 후 각 사용자가 데이터 구조 만들어 관리
+--대표 사용자가 데이터 구조를 정의하고 권한은 각 사용자에게 지정
+--데이터 간의 관계, 데이터 구조, 제약 조건 등 데이터를 저장 및 관리하기 위해 정의한 DB 구조의 범위를 스키마를 통해 그룹 단위로 분류한다.
+
+--SCOTT 계정은 사용자 생성 권한이 없다. 
+CREATE USER ORCLSTUDY IDENTIFIED BY ORACLE;
+ 
+
+CREATE TABLE TEMP ( COL1 VARCHAR2(20), COL2 VARCHAR2(20) );
+GRANT SELECT, INSERT ON TEMP TO ORCLSTUDY;
+COMMIT;
+SELECT * FROM TEMP;
+REVOKE SELECT, INSERT ON TEMP FROM ORCLSTUDY;
+COMMIT;
+
+
+--416p
+GRANT SELECT ON EMP, DEPT, SALGRADE TO PREV_HW;
+
+
+
+
+
+
