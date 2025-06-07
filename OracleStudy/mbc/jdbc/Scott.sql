@@ -543,7 +543,7 @@ SELECT * FROM EMP E, DEPT D WHERE E.DEPTNO = D.DEPTNO ORDER BY EMPNO; --테이�
 --대상 데이터를 어떻게 연결하느냐에 따라
 
 --1. 등가 조인(equi join)/내부 조인, 단순 조인
---여러 테이블에 있는 열은 반드시 속해 있는 테이블 명시해야 함
+--조인 조건이 되는 각 테이블의 열 이름이 같을 경우 반드시 속해 있는 테이블 명시해야 함
 --실무에서는 대부분 열 이름의 테이블 명시 
 --SELECT EMPNO, ENAME, DEPTNO, DNAME, LOC FROM EMP E, DEPT D WHERE E.DEPTNO = D.DEPTNO;
 SELECT E.EMPNO, E.ENAME, D.DEPTNO, D.DNAME, D.LOC FROM EMP E, DEPT D WHERE E.DEPTNO = D.DEPTNO ORDER BY D.DEPTNO, E.DEPTNO;
