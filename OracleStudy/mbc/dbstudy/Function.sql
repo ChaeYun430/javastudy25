@@ -1,0 +1,391 @@
+--=====================<<<CH06, CH07 오라클 함수>>>============================
+
+--특정한 결과 값을 얻기 위해 데이터를 입력할 수 있는 특수 명령어
+--매개변수, 입력 파라미터, 인자
+--단일행 함수; 한 행씩 입력되고 한 행당 결과가 하나씩 나오는 함수
+--다중행 함수: 여러 행이 입력되어 하나의 행으로 결과가 반환되는 함수
+
+--====================<<<문자 데이터>>>==============================
+
+--대소문자 변환 // UPPER, LOWER, INITCAP
+--입력 데이터에 열 이름이나 데이터를 직접 지정해야 함.
+--활용: 실제 검색어의 대, 소문자 여부와 상관없이 검색 단어와 일치한 문자열을 포함한 데이터 검색 가능
+SELECT ENAME, UPPER(ENAME), LOWER(ENAME), INITCAP(ENAME) FROM EMP;
+SELECT * FROM EMP WHERE UPPER(ENAME) = UPPER('SCOTT');
+SELECT * FROM EMP WHERE UPPER(ENAME) LIKE UPPER('%scott%');
+
+--문자열 길이,바이트 구하기 // LENGTH, LENGTHB
+SELECT ENAME, LENGTH(ENAME) FROM EMP;
+SELECT ENAME, LENGTH(ENAME) FROM EMP WHERE LENGTH(ENAME) >= 5;
+SELECT LENGTH('한글'), LENGTHB('한글') FROM DUAL;
+--DUAL TABLE: SYS소유로 SCOTT도 사용 가능한 더미 테이블, 임시 연산이나 함수의 결과 값 확인 용도로 사용
+--더미 데이터(dummy data): 유용한 데이터가 포함되지 않지만 공간을 예비해두어 실제 데이터가 명목상 존재하는 것처럼 다루는 유순한 정보
+--여러건의 물리적 데이터를 이용하여 테스트 (페이징 테스트 등)할 때 사용
+
+--문자열 일부 추출 // SUBSTR, SUBSTRB
+--형식: SUBSTR(문자열 데이터, 시작 위치, 추출 길이)
+SELECT JOB, SUBSTR(JOB, 1, 2), SUBSTR(JOB, 3, 2), SUBSTR(JOB, 5) FROM EMP;
+SELECT JOB, SUBSTR(JOB, -LENGTH(JOB)), SUBSTR(JOB, -LENGTH(JOB), 2), SUBSTR(JOB, -3) FROM EMP;
+
+--문자열 데이터 안에서 특정 문자 위치 찾기 // INSTR
+--형식: INSTR([대상 문자열 데이터(필수)], 
+--			[위치를 찾으려는 부분 문자(필수)], 
+--			[위치 찾기를 시작할 대상 문자열 데이터 위치(선택, 기본값은 1)], 
+--			[시작 위치에서 찾으려는 문자가 몇 번째인지 지정선택, 기본값은 1)])
+--만약 찾으려는 문자가 문자열 데이터에 포함되어 있지 않다면 위치값이 없으므로 0으로 반환
+--LIKE 연산자와 비슷하게 사용 가능
+SELECT INSTR('HELLO, ORACLE!', 'L') AS INSTR_1, 
+	   INSTR('HELLO, ORACLE!', 'L', 5) AS INSTR_2, 
+   	   INSTR('HELLO, ORACLE!', 'L', 2, 2) AS INSTR_3 FROM DUAL;
+
+SELECT * FROM EMP WHERE INSTR(ENAME, 'S') > 0;
+SELECT * FROM EMP WHERE ENAME LIKE '%S%';
+
+--특정 문자를 다른 문자로 바꿈 // REPLACE
+--형식: REPLACE([문자열 데이터 또는 열 이름(필수)], [찾는 문자(필수)], [대체할 문자(선택)]
+SELECT '010-1234-5678' AS REPLACE_BEFORE, 
+		REPLACE('010-1234-5678', '-', ' ') AS REPLACE_1, 
+		REPLACE('010-1234-5678', '-') AS REPLACE_2 FROM DUAL;
+		
+--데이터의 빈 공간을 특정 문자로 채움 // LPAD, RPAD
+--데이터와 자릿수를 지정한 후 데이터 길이가 지정한 자릿수보자 작을 경우에 나머지 공간을 특정 문자로 채우는 함수
+--형식: LPAD/RPAD ([문자열 데이터 또는 열이름(필수)], [데이터 자릿수(필수)], [빈 공간에 채울 문자(선택)])
+--활용: 데이터 일부만 노출해야 하는 개인정보를 출력할 때
+SELECT 'ORACLE', LPAD('ORACLE', 10, '#') AS LPAD_1, LPAD('ORACLE', 10) AS LPAD_2, 
+				 RPAD('ORACLE', 10, '*') AS RPAD_1, RPAD('ORACLE', 10) AS RPAD_2 FROM DUAL;
+SELECT RPAD('971225-', 14, '*') AS RPAD_MNO,
+	   RPAD('010-1234-', 13, '*') AS RPAD_PHONE FROM DUAL;
+	   
+--두 문자열을 합침 // CONCAT
+SELECT CONCAT(EMPNO, ENAME), CONCAT(EMPNO, CONCAT(':', ENAME)) FROM EMP WHERE ENAME = 'SCOTT';
+--문자열 데이터를 연결하는 || 연산자
+SELECT EMPNO || ENAME, EMPNO || ' : ' || ENAME FROM EMP WHERE ENAME = 'SCOTT'
+
+--특정 문자를 지움 // TRIM, LTRIM, RTRIM
+--활용: 검색 대상이 되는 데이터에 혹시나 들어 있을지도 모르는 양쪽 끝의 공백을 제거할 때	
+--삭제할 문자가 생략될 경우 기본적으로 공백 제거
+--삭제 옵션: LEADING, TRAILING, BOTH
+--형식: TRIM([삭제 옵션(선택)] [삭제할 문자(선택)] FROM [원본 문자열 데이터(필수)])
+--(선택)이 없으면 FROM을 쓰지 않는다. 
+SELECT '[' || TRIM(' _ _ORACLE_ _ ') || ']' AS TRIM,
+	   '[' || TRIM(LEADING FROM ' _ _ORACLE_ _ ') || ']' AS TRIM_LEADING,
+	   '[' || TRIM(TRAILING FROM ' _ _ORACLE_ _ ') || ']' AS TRIM_TRAILING,
+	   '[' || TRIM(BOTH FROM ' _ _ORACLE_ _ ') || ']' AS TRIM_BOTH FROM DUAL
+SELECT '[' || TRIM('_' FROM '_ _ORACLE_ _') || ']' AS TRIM,
+	   '[' || TRIM(LEADING '_' FROM '_ _ORACLE_ _') || ']' AS TRIM_LEADING,
+	   '[' || TRIM(TRAILING '_' FROM '_ _ORACLE_ _') || ']' AS TRIM_TRAILING,
+	   '[' || TRIM(BOTH '_' FROM '_ _ORACLE_ _') || ']' AS TRIM_BOTH FROM DUAL	   
+
+	   --LTRIM, RTRIM: 삭제할 문자로 여러 문자 지정이 가능하다.
+--형식: LTRIM/RTRIM ([원본 문자열 데이터(필수)], [삭제할 문자 집합(선택)])
+--삭제할 문자 집합에서 순서와 반복을 통해 만들어 낼 수 있는 모든 조합이 바깥쪽부터 삭제됨
+SELECT '[' || TRIM(' _ORACLE_ ') || ']' AS TRIM,
+	   '[' || LTRIM(' _ORACLE_ ') || ']' AS LTRIM,
+	   '[' || LTRIM('<_ORACLE_>', '_<') || ']' AS LTRIM_2,
+	   '[' || RTRIM(' _ORACLE_ ') || ']' AS RTRIM,
+	   '[' || RTRIM('<_ORACLE_>', '_>') || ']' AS RTRIM_2 FROM DUAL
+   
+--======================<<<숫자 데이터>>>==========================
+
+--지정한 숫자의 특정 위치에서 반올림 // ROUND
+--형식: ROUND([숫자(필수)], [반올림 위치(선택)])
+--자연수 첫째자리 반올림: -1
+--소수점 첫째자리 반올림: 0
+--소수점 둘째자리 반올림: 1
+--지정하지 않으면 소수점 첫째 자리에서 반올림해서 정수 반환
+SELECT ROUND(1234.5678) AS ROUND,
+	   ROUND(1234.5678, 0) AS ROUND_0,
+	   ROUND(1234.5678, 1) AS ROUND_1,
+	   ROUND(1234.5678, 2) AS ROUND_2,
+	   ROUND(1234.5678, -1) AS ROUND_MINUS1,
+	   ROUND(1234.5678, -2) AS ROUND_MINUS2 FROM DUAL;
+	   	   
+--지정한 숫자의 특정 위치에서 버림 // TRUNC
+--형식: TRUNC([숫자(필수)], [반올림 위치(선택)])
+--지정하지 않으면 소수점 둘째 자리에서 버림해서 정수 반환
+SELECT TRUNC(1234.5678) AS TRUNC,
+	   TRUNC(1234.5678, 0) AS TRUNC_0,
+	   TRUNC(1234.5678, 1) AS TRUNC_1,
+	   TRUNC(1234.5678, 2) AS TRUNC_2,
+	   TRUNC(1234.5678, -1) AS TRUNC_MINUS1,
+	   TRUNC(1234.5678, -2) AS TRUNC_MINUS2 FROM DUAL;
+	   
+--지정한 숫자보다 큰 정수 중 가장 작은 정수를 반환 // CEI
+--지정한 숫자보다 작은 정수 중 가장 큰 정수 반환 // FLOOR
+--형식: CEIL/FLOOR([숫자(필수)])
+SELECT CEIL(3.14), FLOOR(3.14), CEIL(-3.14), FLOOR(-3.14) FROM DUAL;
+
+--지정한 숫자를 나눈 나머지 값을 반환 // MOD
+SELECT MOD(15, 6), MOD(10, 2), MOD(11, 2) FROM DUAL;
+
+
+--======================<<<날짜 데이터>>>============================
+--오라클DB서버가 놓인 OS의 현재 날짜와 시간 // SYSDATE
+--날짜 데이터 - 날짜 데이터: 두 날짜 데이터 간의 일수 차이
+SELECT SYSDATE AS NOW, SYSDATE - 1 AS YESTERDAY, SYSDATE + 1 AS TOMORROW FROM DUAL;
+
+--몇 개월 이후 날짜 구하기 // ADD_MONTHS
+--형식: ADD_MONTHS([날짜 데이터(필수)], [더할 개월 수(정수)(필수)])
+SELECT SYSDATE, ADD_MONTHS(SYSDATE, 3) FROM DUAL;
+SELECT EMPNO, ENAME, HIREDATE, ADD_MONTHS(HIREDATE, 120) AS WORK10YEAR FROM EMP;
+SELECT EMPNO, ENAME, HIREDATE, SYSDATE FROM EMP WHERE ADD_MONTHS(HIREDATE, 504) > SYSDATE;
+
+--두 날짜 간의 개월 수 차이 구하기 // MONTHS_BETWEEN
+--앞에서 뒤를 뺀다.
+SELECT EMPNO, ENAME, HIREDATE, SYSDATE, 
+		MONTHS_BETWEEN(HIREDATE, SYSDATE) AS MONTHS1, 
+		MONTHS_BETWEEN(SYSDATE, HIREDATE) AS MONTHS2,
+		TRUNC(MONTHS_BETWEEN(SYSDATE, HIREDATE)) AS MONTHS3 FROM EMP;
+		
+--돌아오는 요일 // NEXT_DAY, 달의 마지막 날짜 // LAST_DAY
+SELECT SYSDATE, NEXT_DAY(SYSDATE, '월요일'), LAST_DAY(SYSDATE) FROM DUAL;
+
+--날짜의 반올림, 버림=================================================================
+--날짜 데이터 기준 포멧
+SELECT STSDATE,
+ROUND(SYSDATE, 'CC') AS FORMAT_CC, --CC. SCC
+ROUND(SYSDATE, 'YYYY') AS FORMAT_YYYY, --SYYYY, YYYY, YEAR, SYEAR, YYY, YY, Y
+ROUND(SYSDATE, 'Q') AS FORMAT_Q, --Q
+ROUND(SYSDATE, 'MM') AS FORMAT_MM, --MONTH, MON, MM, RM
+ROUND(SYSDATE, 'WW') AS FORMAT_WW, --WW
+ROUND(SYSDATE, 'W') AS FORMAT_W, --W
+ROUND(SYSDATE, 'DDD') AS FORMAT_DDD, --DDD, DD, J
+ROUND(SYSDATE, 'DAY') AS FORMAT_DAY, --DAY, DY, D
+ROUND(SYSDATE, 'HH') AS FORMAT_HH, --HH,  HH12, HH24
+ROUND(SYSDATE, 'MI') AS FORMAT_MI --MI
+FROM DUAL;
+
+SELECT STSDATE,
+TRUNC(SYSDATE, 'CC') AS FORMAT_CC, --CC. SCC
+TRUNC(SYSDATE, 'YYYY') AS FORMAT_YYYY, --SYYYY, YYYY, YEAR, SYEAR, YYY, YY, Y
+TRUNC(SYSDATE, 'Q') AS FORMAT_Q, --Q
+TRUNC(SYSDATE, 'MM') AS FORMAT_MM, --MONTH, MON, MM, RM
+TRUNC(SYSDATE, 'WW') AS FORMAT_WW, --WW
+TRUNC(SYSDATE, 'W') AS FORMAT_W, --W
+TRUNC(SYSDATE, 'DDD') AS FORMAT_DDD, --DDD, DD, J
+TRUNC(SYSDATE, 'DAY') AS FORMAT_DAY, --DAY, DY, D
+TRUNC(SYSDATE, 'HH') AS FORMAT_HH, --HH,  HH12, HH24
+TRUNC(SYSDATE, 'MI') AS FORMAT_MI --MI
+FROM DUAL;
+
+--===================<<<형변환 함수>>>========================
+SELECT EMPNO, ENAME, EMPNO + '500' FROM EMP WHERE ENAME = 'SCOTT';
+SELECT 'ABCD' + EMPNO, EMPNO FROM EMP WHERE ENAME = 'SCOTT';
+
+--날짜, 숫자 데이터를 문자데이터로 // TO_CHAR=================
+--TO_CHAR([날짜 데이터(필수)], '[출력되길 원하는 문자 형태(필수)]')
+SELECT TO_CHAR(SYSDATE, 'YYYY/MM/DD HH24:MI:SS') AS 현재날짜시간 FROM DUAL;
+
+SELECT SYSDATE.
+TO_CHAR(STSDATE, 'CC') AS CC,
+TO_CHAR(SYSDATE, 'YYYY') AS YYYY, --(=RRRR)
+TO_CHAR(SYSDATE, 'YY') AS YY, --(=RR)
+TO_CHAR(SYSDATE, 'MM') AS MM,
+TO_CHAR(SYSDATE, 'MON') AS MON,
+TO_CHAR(SYSDATE, 'MONTH') AS MONTH,
+TO_CHAR(SYSDATE, 'DD') AS DD,
+TO_CHAR(SYSDATE, 'DDD') AS DDD,
+TO_CHAR(SYSDATE, 'DY') AS DY,
+TO_CHAR(SYSDATE, 'DAY') AS DAY,
+TO_CHAR(SYSDATE, 'W') AS W
+FROM DUAL;
+
+--'NLS_DATE_LANGUAGE = language'
+SELECT SYSDATE, 
+TO_CHAR(SYSDATE, 'MM') AS MM,
+TO_CHAR(SYSDATE, 'MON', 'NLS_DATE_LANGUAGE = KOREAN') AS MON_KOR, 
+TO_CHAR(SYSDATE, 'MON', 'NLS_DATE_LANGUAGE = JAPANESE') AS MON_JPN,
+TO_CHAR(SYSDATE, 'MON', 'NLS_DATE_LANGUAGE = ENGLISH') AS MON_ENG,
+TO_CHAR(SYSDATE, 'MONTH', 'NLS_DATE_LANGUAGE = KOREAN') AS MONTH_KOR, 
+TO_CHAR(SYSDATE, 'MONTH', 'NLS_DATE_LANGUAGE = JAPANESE') AS MONTH_JPN,
+TO_CHAR(SYSDATE, 'MONTH', 'NLS_DATE_LANGUAGE = ENGLISH') AS MONTH_ENG
+FROM DUAL;
+
+SELECT SYSDATE, 
+TO_CHAR(SYSDATE, 'MM') AS MM,
+TO_CHAR(SYSDATE, 'DD') AS DD,
+TO_CHAR(SYSDATE, 'DY', 'NLS_DATE_LANGUAGE = KOREAN') AS DY_KOR, 
+TO_CHAR(SYSDATE, 'DY', 'NLS_DATE_LANGUAGE = JAPANESE') AS DY_JPN,
+TO_CHAR(SYSDATE, 'DY', 'NLS_DATE_LANGUAGE = ENGLISH') AS DY_ENG,
+TO_CHAR(SYSDATE, 'DAY', 'NLS_DATE_LANGUAGE = KOREAN') AS DAY_KOR, 
+TO_CHAR(SYSDATE, 'DAY', 'NLS_DATE_LANGUAGE = JAPANESE') AS DAY_JPN,
+TO_CHAR(SYSDATE, 'DAY', 'NLS_DATE_LANGUAGE = ENGLISH') AS DAY_ENG
+FROM DUAL;
+
+SELECT SYSDATE,
+TO_CHAR(SYSDATE, 'HH24:MI:SS')AS HH24MISS,
+TO_CHAR(SYSDATE, 'HH12:MI:SS AM') AS HHMISS_AM,
+TO_CHAR(SYSDATE, 'HH:MI:SS P.M') AS HHMISS_PM
+FROM DUAL;
+		
+--숫자 변형 //9(빈 자리를 채우지 않음), 0(빈 자리를 0으로 채움), 소수점과 천 단위 구분 기호 표시 
+SELECT SAL, 
+		TO_CHAR(SAL, '$999,999') AS SAL_$,
+		TO_CHAR(SAL, 'L999,999') AS SAL_L,
+		TO_CHAR(SAL, '999,999.00') AS SAL_1,
+		TO_CHAR(SAL, '000,999,999.00') AS SAL_2,
+		TO_CHAR(SAL, '000999999.99') AS SAL_3,
+		TO_CHAR(SAL, '999,999,00') AS SAL_4 FROM EMP;
+		
+		
+--문자 데이터를 숫자 데이터로 변환 // TO_NUMBER
+--IMPLICIT TYPE CONVERSION
+SELECT 1300 - '1500', '1300' + 1500, '2' * '3' FROM DUAL;
+SELECT '1,300' - '1,500' FROM DUAL;
+--EXPLICIT TYPE CONVERSION
+--숫자 데이터가 가공된 문자 데이터로 저장되어 있고 그 데이터를 산술 연산에 사용하고자 할 경우
+--TO_NUMBER('[문자열 데이터(필수)]', '[인식될 숫자형태(필수)]')
+SELECT TO_NUMBER('1,300', '999,999') - TO_NUMBER('1,500', '999,999') FROM DUAL;
+
+--문자 데이터를 날짜 데이터로 변환 // TO_DATE
+--TO_NUMBER('[문자열 데이터(필수)]', '[인식될 날짜형태(필수)]')
+SELECT TO_DATE('2018-07-14', 'YYYY-MM-DD') AS TODATE1,
+	   TO_DATE('20180714', 'YYYY-MM-DD') AS TODATE2 FROM DUAL;
+	   
+SELECT * FROM EMP WHERE HIREDATE > TO_DATE('1981/06/01', 'YYYY/MM/DD');
+
+SELECT TO_DATE('49/12/10', 'YY/MM/DD') AS YY_49,
+	   TO_DATE('49/12/10', 'RR/MM/DD') AS RR_49,
+	   TO_DATE('50/12/10', 'YY/MM/DD') AS YY_50,
+	   TO_DATE('50/12/10', 'RR/MM/DD') AS RR_49,
+	   TO_DATE('51/12/10', 'YY/MM/DD') AS YY_51,
+	   TO_DATE('51/12/10', 'RR/MM/DD') AS RR_51 FROM DUAL;
+
+--========================<<<조건문>>>=========================
+
+--NVL([NULL인지 여부를 검사할 데이터 또는 열(필수)], [앞의 데이터가 NULL일 경우 반환할 데이터(필수)]) 
+--활용: 특정 열의 데이터가 NULL일 경우 연산 수행을 위해 데이터를 NULL이 아닌 다른 값으로 대체해야 할때
+SELECT EMPNO, ENAME, SAL, COMM, SAL+COMM, NVL(COMM, 0), SAL+NVL(COMM,0) FROM EMP;
+
+--NVL2([], [앞 데이터가 NULL이 아닐 경우 반환할 데이터 또는 계산식(필수)], [])
+SELECT EMPNO, ENAME, COMM, NVL2(COMM, 'O', 'X'), NVL2(COMM, SAL*12+COMM, SAL*12) AS ANNSAL FROM EMP;
+
+--DECODE([검사 대상], [조건1], [결과], [조건2], [결과], [ELSE]) cf.switch문 연상
+--ELSE값 지정 안 하면 NULL 반환
+SELECT EMPNO, ENAME, JOB, SAL, DECODE(JOB, 'MANAGER', SAL*1.1, 'SALESMAN', SAL*1.05, 'ANALYST', SAL, SAL*1.03) AS UPSAL FROM EMP;
+
+--CASE([검사대상(선택)] WHEN [조건1] THEN [결과] WHEN [조건2] THEN [결과] ELSE [결과] END)
+--각 조건에 사용하는 데이터가 서로 상관없어도 된다. 
+--DECODE 함수의 상위 포함관계에 있다.
+SELECT EMPNO, ENAME, JOB, SAL, CASE JOB WHEN 'MANAGER' THEN SAL*1.1 WHEN 'SALESMAN' THEN SAL*1.05 WHEN 'ANALYST' THEN SAL ELSE SAL*1.03 END AS UPSAL FROM EMP;
+SELECT EMPNO, ENAME, COMM, CASE WHEN COMM IS NULL THEN '해당사항 없음' WHEN COMM = 0 THEN '수당없음' WHEN COMM > 0 THEN '수당없음: ' || COMM END AS COMM_TEXT FROM EMP
+
+--174P
+SELECT EMPNO, RPAD(SUBSTR(EMPNO, 1, 2), 4, '*') AS MASKING_EMPNO, ENAME, RPAD(SUBSTR(ENAME, 1, 1), 5, '*') AS MASKING_ENAME FROM EMP WHERE LENGTH(ENAME) >=5 AND LENGTH(ENAME)<6;
+
+SELECT EMPNO, ENAME, SAL, TRUNC(SAL/21.5,2) AS DAY_PAY, ROUND(SAL/21.5/8, 1) AS TIME_PAY FROM EMP;
+
+SELECT EMPNO, ENAME, HIREDATE, TO_CHAR(NEXT_DAY(ADD_MONTHS(HIREDATE, 3), '월요일'), 'YYYY-MM-DD') AS R_JOB, NVL(TO_CHAR(COMM), 'N/A') AS COMM FROM EMP;
+
+SELECT EMPNO, ENAME, MGR, CASE WHEN MGR IS NULL THEN 0000 WHEN SUBSTR(MGR, 1, 2) = 75 THEN 5555 WHEN SUBSTR(MGR, 1, 2) = 76 THEN 6666
+WHEN SUBSTR(MGR, 1, 2) = 77 THEN 7777 WHEN SUBSTR(MGR, 1, 2) = 78 THEN 8888 ELSE MGR END AS CHG_MGR FROM EMP;
+
+--==========================<<<다중행 함수>>>========================
+
+--형식: 함수명([DISTINCT/ALL] [합계를 구할 데이터]) OVER(분석을 위한 여러 문법을 지정)
+--다중행 함수를 사용한 SELECT절에는 기본적으로 여러 행이 결과로 나올 수 있는 열을 함께 사용 불가
+SELECT ENAME, SUM(SAL) FROM EMP;
+
+--합계 // SUM
+SELECT SUM(SAL) FROM EMP;
+--NULL 데이터를 제외하고 합계를 구한다.
+SELECT SUM(COMM) FROM EMP;
+--DISTINCT는 중복 데이터를 제외하고 계산할 때 사용
+SELECT SUM(DISTINCT SAL), SUM(ALL SAL), SUM(SAL) FROM EMP;
+
+--데이터의 개수 // COUNT
+SELECT COUNT(*) FROM EMP;
+SELECT COUNT(*) FROM EMP WHERE DEPTNO = 30;
+--활용: 웝커뮤니티에서 특정 회뤈의 정보를 조합하여 회원 등급이나 레벨 관리 가능
+SELECT COUNT(DISTINCT SAL), COUNT(ALL SAL), COUNT(SAL) FROM EMP;
+--NULL데이터는 반환 개수에서 제외됨
+SELECT COUNT(COMM) FROM EMP;
+SELECT COUNT(COMM) FROM EMP WHERE COMM IS NOT NULL;
+
+--최댓값, 최솟값 // MAX, MIN
+SELECT MAX(SAL) FROM EMP WHERE DEPTNO = 10;
+SELECT MIN(SAL) FROM EMP WHERE DEPTNO = 10;
+SELECT MAX(HIREDATE) FROM EMP WHERE DEPTNO = 20;
+SELECT MIN(HIREDATE) FROM EMP WHERE DEPTNO = 20;
+
+--평균값 // AVG
+SELECT AVG(SAL) FROM EMP WHERE DEPTNO = 30;
+SELECT AVG(DISTINCT SAL) FROM EMP WHERE DEPTNO = 30;
+
+--=================<<<GROUP BY 절>>>==================
+
+--하드 코딩: 코드를 상황에 따라 유연하게 동작할 수 있도록 일반화 또는 공식화해서 제작하지 않고, 그 상황 자체를 각각 지정하여 제작하는 방식
+--별칭 사용 불가
+SELECT AVG(SAL), DEPTNO FROM EMP GROUP BY DEPTNO;
+SELECT DEPTNO, JOB, AVG(SAL) FROM EMP GROUP BY DEPTNO, JOB ORDER BY DEPTNO, JOB;
+--다중행 함수를 사용하지 않은 일반 열은 GROUP BY절에 명시하지 않으면 SELECT절에서 사용할 수 없다. 
+SELECT ENAME, DEPTNO, AVG(SAL) FROM EMP GROUP BY DEPTNO;
+
+--HAVING절: 그룹화된 결과 값의 범위를 제한하는 데 사용
+SELECT DEPTNO, JOB, AVG(SAL) FROM EMP GROUP BY DEPTNO, JOB HAVING AVG(SAL) >= 2000 ORDER BY DEPTNO, JOB;
+--출력 행을 제한하는 WHERE절에서는 그룹화된 데이터를 제한하는 조건식 지정 불가
+SELECT DEPTNO, JOB, AVG(SAL) FROM EMP WHERE AVG(SAL) >= 2000 GROUP BY DEPTNO, JOB ORDER BY DEPTNO, JOB;
+--그룹화 데상 데이터에서 처음부터 제외할 목적이면 
+SELECT DEPTNO, JOB, AVG(SAL) FROM EMP GROUP BY DEPTNO, JOB HAVING AVG(SAL) >= 2000 ORDER BY DEPTNO, JOB;
+SELECT DEPTNO, JOB, AVG(SAL) FROM EMP WHERE SAL <= 3000 GROUP BY DEPTNO, JOB HAVING AVG(SAL) >= 2000 ORDER BY DEPTNO, JOB;
+
+--ROLLUP, CUBE, GROUPING SETS 함수
+SELECT DEPTNO, JOB, COUNT(*), MAX(SAL), SUM(SAL), AVG(SAL) FROM EMP
+	GROUP BY DEPTNO, JOB ORDER BY DEPTNO, JOB;
+--ROLLUP: N+1 명시함 열을 소그룹부터 대그룹의 순서로 각 그룹별 결과를 출력하고 마지막에 총 데이터의 결과를 출력
+SELECT DEPTNO, JOB, COUNT(*), MAX(SAL), SUM(SAL), AVG(SAL) FROM EMP 
+	GROUP BY ROLLUP(DEPTNO, JOB);
+--CUBE: 2^N 지정한 모든 열에서 가능한 조합의 결과 출력
+SELECT DEPTNO, JOB, COUNT(*), MAX(SAL), SUM(SAL), AVG(SAL) FROM EMP
+	GROUP BY CUBE(DEPTNO, JOB) ORDER BY DEPTNO, JOB;
+--PARTIAL ROLLUP/CUBE
+SELECT DEPTNO, JOB, COUNT(*) FROM EMP GROUP BY DEPTNO, ROLLUP(JOB);
+SELECT DEPTNO, JOB, COUNT(*) FROM EMP GROUP BY JOB, ROLLUP(DEPTNO);
+--GROUPING SETS: 지정한 모든 열을 같은 수준으로 출력
+SELECT DEPTNO, JOB, COUNT(*) FROM EMP GROUP BY GROUPING SETS(DEPTNO, JOB) ORDER BY DEPTNO, JOB;
+
+--================<<<그룹화 함수>>>========================
+
+--데이터 자체의 가공이나 특별한 연산 기능을 수행하지는 않으나 데이터의 식별이 쉽고 가독성을 높이기 위한 목적으로 사용
+
+--GROUPING 함수: 그룹화 대상으로 지정한 열이 그룹화된 상태로 결과가 집계되었는지 확인
+SELECT DEPTNO, JOB, COUNT(*), MAX(SAL), MIN(SAL), AVG(SAL), GROUPING(DEPTNO), GROUPING(JOB) FROM EMP 
+	GROUP BY CUBE(DEPTNO, JOB) ORDER BY DEPTNO, JOB;
+SELECT DECODE(GROUPING(DEPTNO), 1, 'ALL_DEPT', DEPTNO) AS DEPTNO, DECODE(GROUPING(JOB), 1, 'ALL_JOB', JOB) AS JOB, COUNT(*), MAX(SAL), MIN(SAL), AVG(SAL) FROM EMP
+	GROUP BY CUBE(DEPTNO, JOB) ORDER BY DEPTNO, JOB;
+
+--GROUPING_ID 함수: GROUPING과 같은 기능, 검사 대상 열 여러 개 지정 가능
+--결과는 그룹화 비트 벡터 값으로 나타냄
+SELECT DEPTNO, JOB, COUNT(*), MAX(SAL), MIN(SAL), AVG(SAL), GROUPING(DEPTNO), GROUPING(JOB), GROUPING_ID(DEPTNO, JOB) FROM EMP 
+GROUP BY CUBE(DEPTNO, JOB) ORDER BY DEPTNO, JOB;
+
+--LISTAGG: 그룹화 데이터를 하나의 열에 가로로 나열하여 출력
+SELECT DEPTNO, ENAME FROM EMP GROUP BY DEPTNO, ENAME ORDER BY DEPTNO;
+SELECT DEPTNO, LISTAGG(ENAME,', ') WITHIN GROUP(ORDER BY SAL DESC) AS ENAMES FROM EMP GROUP BY DEPTNO
+
+--PIVOT, UNPIVOT
+SELECT DEPTNO, JOB, MAX(SAL) FROM EMP GROUP BY DEPTNO, JOB ORDER BY DEPTNO, JOB;
+SELECT * FROM (SELECT DEPTNO, JOB, SAL FROM EMP ) 
+	PIVOT(MAX(SAL) FOR DEPTNO IN (10, 20, 30)	) ORDER BY JOB
+SELECT * FROM (SELECT DEPTNO, JOB, SAL FROM EMP ) 
+	PIVOT(MAX(SAL) FOR JOB IN ('CLERK' AS CLERK, 'SALESMAN' AS SALESMAN, 'MANAGER' AS MANAGER, 'ANALYST' AS ANALYFT)) ORDER BY DEPTNO
+SELECT DEPTNO, MAX(DECODE(JOB, 'CLERK', SAL)) AS 'CLERK',
+			   MAX(DECODE(JOB, 'SALESMAN', SAL)) AS 'SALESMAN',
+			   MAX(DECODE(JOB, 'PRESIDENT', SAL)) AS 'PRESIDENT',
+			   MAX(DECODE(JOB, 'MANAGER', SAL)) AS 'MANAGER',
+			   MAX(DECODE(JOB, 'ANALYST', SAL)) AS 'ANALYST' FROM EMP GROUP BY DEPTNO ORDER BY DEPTNO
+--------------------------208~211
+
+--212P
+SELECT DEPTNO, TRUNC(AVG(SAL)) AS AVG_SAL, MAX(SAL) AS MAX_SAL, MIN(SAL) AS MIN_SAL, COUNT(*) AS CNT
+	FROM EMP GROUP BY DEPTNO;
+	
+SELECT JOB, COUNT(*) FROM EMP GROUP BY JOB HAVING COUNT(*)>=3;
+
+SELECT TO_CHAR(HIREDATE, 'YYYY') AS HIRE_YEAR, DEPTNO, COUNT(*) AS CNT FROM EMP GROUP BY TO_CHAR(HIREDATE, 'YYYY'), DEPTNO;
+
+SELECT NVL2(COMM, 'O', 'X') AS EXIST_COMM, COUNT(*) AS CNT FROM EMP GROUP BY NVL2(COMM, 'O', 'X');
+
+SELECT DEPTNO, TO_CHAR(HIREDATE, 'YYYY') AS HIRE_YEAR, COUNT(*) AS CNT, MAX(SAL) AS MAX_SAL, SUM(SAL) AS SUM_SAL, AVG(SAL) AS AVG_SAL
+	FROM EMP GROUP BY ROLLUP(DEPTNO, TO_CHAR(HIREDATE, 'YYYY'));
+	
