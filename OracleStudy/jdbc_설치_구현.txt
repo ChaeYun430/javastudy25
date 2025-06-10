@@ -1,0 +1,42 @@
+<JAVA와 DB 연결>
+
+Connection conn  =  null;
+Statement  stmt =  null;
+PreparedStatement pstmt = null;
+Resultset resultSet = null;
+int  result = 0;
+
+try{
+//1.  JDBC  드라이버 로드
+Class.forName("드라이버명"); //Oracle: oracle.jdbc.driver.OracleDriver
+//2.  DB 연결 객체  생성
+ conn  =  DriverManager.getConnection(URL,USER, PASSWORD);
+//3. sql  문  입력
+ stmt =  conn.createStatement();
+String  sql =  "sql구문 완성";
+
+
+
+
+resultSet  = stmt.executeQuery(sql);
+result  =  stmt.executeUpdate(sql);
+
+pstmt  = 
+
+*예외  처리하기
+try 문에서 Exception 예외가 발생할 경우 catch (Exception e) 로 빠져서 그 안의 실행문을 실행한다.
+선택적으로 마지막의 finally블럭은 try-catch문과 함께 예외발생 여부과 관계없이 "항상. 무조건" 실행되어야할 코드를 적는다.
+(finally 블록 활용:  보통은 자원이나 DB에 커넥션 한 경우, 파일 닫기, 연결 닫기(close) 등과 같은 "정리"코드를 넣는 데 사용된다.)
+예외발생시 발생예외에 해당하는 클래스의 인스턴스가 만들어진다.
+모든 예외클래스는 Exception클래스의 자손이므로, catch블럭 괄호에 Exception e 를 선언해 놓으면 어떤 종류의 예외가 발생하더라도 이 catch블럭에 의해서 처리가 된다. 
+출처: https://cheershennah.tistory.com/147 [Today I Learned. @cheers_hena 치얼스헤나:티스토리]
+
+- 예외가 try 블럭에서 발생한 경우
+ 발생한 예외와 일치하는 catch 문이 있는지 확인  후 실행
+ 일치하는 catch 문이 없다면 예외는 처리되지 못하고 에러 발생.
+
+- 예외가 try 블럭 안에서 발생하지 않은 경우
+  catch블럭을 거치지 않고 전체 try-catch문을 빠져나가서 수행을 계속한다. 
+ 
+- 예외가 try 블럭 밖에서 발생한 경우
+ 예외는 아무 처리되지 못한 채 에러 발생.
