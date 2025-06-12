@@ -9,6 +9,7 @@ public class MemberDTO {
 	private String nick;
 	private String phone;
 	private Date regist;
+	private Date update;
 	private String ctl;
 	
 	

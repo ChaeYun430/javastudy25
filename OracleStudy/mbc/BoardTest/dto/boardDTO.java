@@ -2,7 +2,7 @@ package boardtest.dto;
 
 import java.util.Date;
 
-public class boardDTO {
+public class BoardDTO {
 	private int bno;
 	private String bTitle;
 	private String bContent;

@@ -8,9 +8,11 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 import boardtest.dto.MemberDTO;
-import boardtest.dto.boardDTO;
+import oracle.net.aso.b;
+import boardtest.dto.BoardDTO;
 
 public class BoardDAO {
+	
 	Board_binDAO binDAO = new Board_binDAO();
 
 	Connection conn = null;
@@ -52,23 +54,34 @@ public class BoardDAO {
 		}
 	}
 
+	//readOne method
+	private void readOne(ResultSet resultSet) throws SQLException {
+		System.out.println("번호\t 제목\t 작성자\t 작성일\t 수정일");
+		while (resultSet.next()) {
+			System.out.print(resultSet.getInt("BNO") + "\t");
+			System.out.print(resultSet.getString("BTITLE") + "\t");
+			System.out.print(resultSet.getString("BWRITER") + "\t");
+			System.out.print(resultSet.getDate("BDATE") + "\t");
+			System.out.print(resultSet.getDate("BUPDATE") + "\t");
+		}
+	}//readOne method
 	
-	//searchBoard method
-	public void searchBoard(String input) throws SQLException {
+	//searchBoards method
+	public void searchBoards(String input) throws SQLException {
 		try {
 			String sql1 = "SELECT * FROM BOARD WHERE BWRITER = ? ORDER BY BDATE DESC";
 			String sql2 = "SELECT * FROM BOARD WHERE BTITLE = ? ORDER BY BDATE DESC";
 			pstmt = conn.prepareStatement(sql1);
 			pstmt.setString(1, input);
 			resultSet = pstmt.executeQuery();
-			if (resultSet.first()) {
+			if (resultSet.next()) {
 				readOne(resultSet);
 				return;
 			}
 			pstmt = conn.prepareStatement(sql2);
 			pstmt.setString(1, input);
 			resultSet = pstmt.executeQuery();
-			if (resultSet.first()) {
+			if (resultSet.next()) {
 				readOne(resultSet);
 				return;
 			}
@@ -79,25 +92,33 @@ public class BoardDAO {
 			pstmt.close();
 			resultSet.close();
 		}
-	}//searchBoard method
+	}//searchBoards method
 
 	
 	//searchOne method
-	public boardDTO searchOne(int detail, boardDTO boardDTO) throws SQLException {
+	public BoardDTO searchOne(int detail) throws SQLException {
 		try {
 			String sql = "SELECT * FROM BOARD WHERE BNO = ? ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, detail);
 			resultSet = pstmt.executeQuery();
+			BoardDTO boardDTO = new BoardDTO();
 			if (resultSet.next()) {
-				System.out.print(resultSet.getInt("BNO") + "\t");
-				System.out.print(resultSet.getString("BTITLE") + "\t");
-				System.out.print(resultSet.getString("BWRITER") + "\t");
-				System.out.print(resultSet.getDate("BDATE") + "\t");
-				if (resultSet.getDate("BUPDATE") != null) {
-					System.out.print(resultSet.getDate("BUPDATE") + "\t");
+				boardDTO.setBno(resultSet.getInt("BNO"));
+				boardDTO.setbTitle(resultSet.getString("BTITLE"));
+				boardDTO.setMno(resultSet.getInt("MNO"));
+				boardDTO.setbDate(resultSet.getDate("BDATE"));
+				boardDTO.setbUpDate(resultSet.getDate("BUPDATE"));
+				boardDTO.setbContent(resultSet.getString("BCONTENT"));
+				
+				System.out.print(boardDTO.getBno() + "\t");
+				System.out.print(boardDTO.getbTitle() + "\t");
+				System.out.print(boardDTO.getMno()  + "\t");//회원 번호에서 회원 명 나오게 변경 필요
+				System.out.print(boardDTO.getbDate() + "\t");
+				if (boardDTO.getbUpDate() != null) {
+					System.out.print(boardDTO.getbUpDate() + "\t");
 				}
-				System.out.print(resultSet.getString("BCONTENT"));
+				System.out.print(boardDTO.getbContent());
 				return boardDTO;
 			}
 		} catch (SQLException e) {
@@ -111,37 +132,14 @@ public class BoardDAO {
 	}//searchOne method
 
 	
-	//readOne method
-	private void readOne(ResultSet resultSet) throws SQLException {
-		System.out.println("번호\t 제목\t 작성자\t 작성일\t 수정일");
-		while (resultSet.next()) {
-			System.out.print(resultSet.getInt("BNO") + "\t");
-			System.out.print(resultSet.getString("BTITLE") + "\t");
-			System.out.print(resultSet.getString("BWRITER") + "\t");
-			System.out.print(resultSet.getDate("BDATE") + "\t");
-			System.out.print(resultSet.getDate("BUPDATE") + "\t");
-		}
-	}//readOne method
 
-	
-	
+
 	public void commment() {
 
 	}
 
-	public void delete() {
-		System.out.println("삭제가 완료되었습니다.");
-		binDAO.insert();
-	}
-
-	public void reply() {
-		// TODO Auto-generated method stub
-
-	}
-	
-	
 	//insert method
-	public void insert(boardDTO boardDTO, MemberDTO session) throws SQLException {
+	public void insert(BoardDTO boardDTO, MemberDTO session) throws SQLException {
 		try {
 			String sql = "INSERT INTO BOARD (BNO, BTITLE, BCONTENT, MNO)"
 					+ "VALUES (BOARD_SEQ.NEXTVAL, ?, ?, ?)";
@@ -164,8 +162,48 @@ public class BoardDAO {
 		}
 	}//insert method
 
-	public void update(boardDTO boardDTO, MemberDTO session) {
-		
-		
-	}
+	//update method
+	public void update(BoardDTO boardDTO) throws SQLException {
+		try {
+			String sql = "UPDATE BOARD SET (BTITLE, BCONTENT) = (?, ?) WHERE  ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, boardDTO.getbTitle());
+			pstmt.setString(2, boardDTO.getbContent());
+			pstmt.setInt(3, boardDTO.getMno());
+			result = pstmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("게시글 수정이 완료되었습니다.");
+			}else {
+				System.out.println("게시물을 수정하지 못했습니다.");
+			}
+		} catch (SQLException e) {
+			System.out.println("check update method of BoardDAO");
+		}finally {
+			pstmt.close();
+		}
+	}//update method
+	
+	
+	//delete method
+	public void delete(int choose, MemberDTO session) throws SQLException {
+		try {
+			String sql = "DELETE * FROM BOARD WHERE BNO = ? AND MNO = ? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, choose);
+			pstmt.setInt(2, session.getMno());
+			result = pstmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("게시글이 삭제되었습니다.");
+				binDAO.insert();
+			}else {
+				System.out.println("게시물을 삭제하지 못했습니다.");
+			}
+		} catch (SQLException e) {
+			System.out.println("check update method of BoardDAO");
+		}finally {
+			pstmt.close();
+		}
+	}//delete method
+	
+	
 }
