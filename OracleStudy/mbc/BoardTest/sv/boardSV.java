@@ -19,7 +19,7 @@ public class BoardSV {
 		boolean run = true;
 		while (run) {
 			System.out.println("===============회원용 게시판=============");
-			String[] menu = { "1. 게시물 목록", "2. 게시물 조회", "3. 내 게시물 관리", "4. 로그아웃" };
+			String[] menu = { "1. 게시물 목록", "2. 게시물 조회", "3. 내 게시물 관리", "4. 내 회원 관리", "5. 로그아웃" };
 			for (int i = 0; i < menu.length; i++) {
 				System.out.println(menu[i]);
 			}
@@ -56,6 +56,9 @@ public class BoardSV {
 				myBoard(session);
 				break;
 			case "4":
+				MemberSV.userMenu(session);
+				break;
+			case "5":
 				session = null;
 				System.out.println("로그아웃되었습니다.");
 				run = false;

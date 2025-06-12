@@ -9,8 +9,7 @@ public class MemberDTO {
 	private String nick;
 	private String phone;
 	private Date regist;
-	private Date update;
-	private String ctl;
+	private String ctg;
 	
 	
 	public int getMno() {
@@ -49,12 +48,13 @@ public class MemberDTO {
 	public void setRegist(Date regist) {
 		this.regist = regist;
 	}
-	public String getCtl() {
-		return ctl;
+	public String getCtg() {
+		return ctg;
 	}
-	public void setCtl(String ctl) {
-		this.ctl = ctl;
+	public void setCtg(String ctg) {
+		this.ctg = ctg;
 	}
+	
 	
 	
 }

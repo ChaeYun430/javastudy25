@@ -42,12 +42,11 @@ public class MemberDAO {
 				pstmt.setString(2, session.getPw());
 				resultSet = pstmt.executeQuery();
 				if (resultSet.next()) {
-					session.setMno(result);
-					session.setNick(sql);
-					session.setPhone(sql);
-					session.setRegist(null);
-
-					session.setCtl(sql);
+					session.setMno(resultSet.getInt("MNO"));
+					session.setNick(resultSet.getString("NICK"));
+					session.setPhone(resultSet.getString("PHONE"));
+					session.setRegist(resultSet.getDate("regist"));
+					session.setCtg(resultSet.getString("CTG"));
 					return session;
 				}
 			} catch (SQLException e) {
